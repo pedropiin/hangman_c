@@ -9,12 +9,22 @@ void cria_array_objetos(char objetos[][100])
     strcpy(objetos[1], "computador");
     strcpy(objetos[2], "lamparina");
     strcpy(objetos[3], "filtro");
-    strcpy(objetos[4], "caderno");
+    strcpy(objetos[4], "vuvuzela");
     strcpy(objetos[5], "bicicleta");
     strcpy(objetos[6], "chaveiro");
     strcpy(objetos[7], "garrafa");
     strcpy(objetos[8], "lapiseira");
-    strcpy(objetos[9], "porta");
+    strcpy(objetos[9], "guidao");
+    strcpy(objetos[10], "xilofone");
+    strcpy(objetos[11], "narguile");
+    strcpy(objetos[12], "webcam");
+    strcpy(objetos[13], "ampulheta");
+    strcpy(objetos[14], "despertador");
+    strcpy(objetos[15], "saxofone");
+    strcpy(objetos[16], "skate");
+    strcpy(objetos[17], "candelabro");
+    strcpy(objetos[18], "paquimetro");
+    strcpy(objetos[19], "desfibrilador");
 }
 
 void cria_array_paises(char paises[][100])
@@ -29,16 +39,49 @@ void cria_array_paises(char paises[][100])
     strcpy(paises[7], "china");
     strcpy(paises[8], "taiwan");
     strcpy(paises[9], "moldavia");
+    strcpy(paises[10], "australia"); //19
+    strcpy(paises[11], "butao");
+    strcpy(paises[12], "bielorussia");
+    strcpy(paises[13], "eritrea"); //14
+    strcpy(paises[14], "kiribati");
+    strcpy(paises[15], "espanha");
+    strcpy(paises[16], "argentina");
+    strcpy(paises[17], "venezuela");
+    strcpy(paises[18], "egito");
+    strcpy(paises[19], "liechtenstein"); //13
+}
+
+void cria_array_animais(char animais[][100]) {
+    strcpy(animais[0], "albatroz");
+    strcpy(animais[1], "cachorro");
+    strcpy(animais[2], "bacalhau");
+    strcpy(animais[3], "escaravelho");
+    strcpy(animais[4], "hamster");
+    strcpy(animais[5], "gato");
+    strcpy(animais[6], "tuiuiu");
+    strcpy(animais[7], "tapir");
+    strcpy(animais[8], "ornitorrinco");
+    strcpy(animais[9], "cachorro");
+    strcpy(animais[10], "lhama");
+    strcpy(animais[11], "gorila");
+    strcpy(animais[12], "baleia");
+    strcpy(animais[13], "tubarao");
+    strcpy(animais[14], "gerbo");
+    strcpy(animais[15], "morcego");
+    strcpy(animais[16], "ocapi");
+    strcpy(animais[17], "piranha");
+    strcpy(animais[18], "hiena");
+    strcpy(animais[19], "girafa");
 }
 
 int checa_espacos_faltantes(char *vetor_jogo, int tamanho_palavra) {
-    int i, espacos;
+    int i, espacos_vazios = 0;
     for (i = 0; i < tamanho_palavra; i++) {
         if (vetor_jogo[i] == '_') {
-            espacos++;
+            espacos_vazios++;
         }
     }
-    if (espacos > 0) {
+    if (espacos_vazios > 0) {
         return 1;
     } else {
         return 0;
@@ -47,7 +90,7 @@ int checa_espacos_faltantes(char *vetor_jogo, int tamanho_palavra) {
 
 int escolhe_modo_jogo() {
     int modo_jogo;
-    printf("Você gostaria de jogar no tema objetos (1) ou países (2)?\n");
+    printf("Você gostaria de jogar no tema objetos (1), países (2) ou animais (3)?\n");
     scanf(" %d", &modo_jogo);
     return modo_jogo;
 }
@@ -55,7 +98,7 @@ int escolhe_modo_jogo() {
 char recebe_letra() {
     char letra;
     printf("Digite uma tentativa de letra: ");
-    scanf("%c", &letra);
+    scanf(" %c", &letra);
     return letra;
 }
 
@@ -98,7 +141,7 @@ int retira_letra_palavra(char palavra[], int tamanho_palavra, char letra_input, 
 void inicializa_jogo_zerado(char *vetor_jogo, int tamanho_palavra){
     int i;
     for (i = 0; i < tamanho_palavra; i++)
-    {
+    {   
         vetor_jogo[i] = '_';
     }
     vetor_jogo[tamanho_palavra] = '\0';
@@ -119,25 +162,28 @@ void coloca_letra_vetor(int *indices_aparicao_letra, int num_aparicoes_letra, ch
 }
 
 void printa_vetor_jogo(char *vetor_jogo) {
-    printf("Por enquanto, a palavra formada é: %s", vetor_jogo);
+    printf("Por enquanto, a palavra formada é: %s\n", vetor_jogo);
 }
 
 
 int main()
 {
-    char objetos[10][100], paises[10][100], palavra[100], letra_input;
-    int i, i_random, modo_jogo, num_erros = 10;
+    char objetos[20][100], paises[20][100], animais[20][100], palavra[100], letra_input;
+    int i, i_random, modo_jogo, num_erros = 5;
     cria_array_objetos(objetos);
     cria_array_paises(paises);
+    cria_array_animais(animais);
 
     srand(time(NULL));
-    i_random = rand() % 10;
+    i_random = rand() % 20;
     modo_jogo = escolhe_modo_jogo();
 
     if (modo_jogo == 1) {
         strcpy(palavra, objetos[i_random]);
     } else if (modo_jogo == 2) {
         strcpy(palavra, paises[i_random]);
+    } else if (modo_jogo == 3) {
+        strcpy(palavra, animais[i_random]);
     } else {
         printf("Esse modo de jogo não existe.\n");
         exit(1);
@@ -157,8 +203,12 @@ int main()
     int *indices_aparicao_letra;
     indices_aparicao_letra = malloc(sizeof(tamanho_palavra) * 4);
 
+    /*
+    A partir daqui, o jogo é inicializado.
+    */
     printf("A palavra é da forma %s (%d letras)\n", vetor_jogo, tamanho_palavra);
-    while (checa_espacos_faltantes(vetor_jogo, tamanho_palavra) == 1)
+
+    while (checa_espacos_faltantes(vetor_jogo, tamanho_palavra))
     {
         reseta_indices_aparicao(indices_aparicao_letra, tamanho_palavra);
         letra_input = recebe_letra();
@@ -172,17 +222,21 @@ int main()
             } else {
                 printf("Esta letra não faz parte da palavra.\n");
                 num_erros--;
+                printf("Você pode errar mais %d vezes.\n", num_erros);   
             }
         } else {
             printf("Você já tentou esta letra.\n");
         }
-        printf("Você só pode errar mais %d vezes.\n", num_erros);
+
+        if (num_erros <= 0) {
+            printf("Puts, você perdeu. Tente jogar outra vez!\n");
+            break;
+        }
+        
     }
 
     if (num_erros > 0) {
-        printf("Parabéns! Você acertou!\n");
-    } else {
-        printf("Puts, você perdeu. Tente jogar outra vez!\n");
+        printf("Parabéns! Você ganhou!\n");
     }
     free(vetor_jogo);
     free(indices_aparicao_letra);
