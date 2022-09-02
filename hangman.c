@@ -5,40 +5,50 @@
 
 void cria_array_objetos(char objetos[][100])
 {
-    strcpy(objetos[], "baralho");
-    strcpy(objetos[], "computador");
-    strcpy(objetos[], "lamparina");
-    strcpy(objetos[], "filtro");
-    strcpy(objetos[], "caderno");
-    strcpy(objetos[], "bicicleta");
-    strcpy(objetos[], "chaveiro");
-    strcpy(objetos[], "garrafa");
-    strcpy(objetos[], "lapiseira");
-    strcpy(objetos[], "porta");
+    strcpy(objetos[0], "baralho");
+    strcpy(objetos[1], "computador");
+    strcpy(objetos[2], "lamparina");
+    strcpy(objetos[3], "filtro");
+    strcpy(objetos[4], "caderno");
+    strcpy(objetos[5], "bicicleta");
+    strcpy(objetos[6], "chaveiro");
+    strcpy(objetos[7], "garrafa");
+    strcpy(objetos[8], "lapiseira");
+    strcpy(objetos[9], "porta");
 }
 
 void cria_array_paises(char paises[][100])
 {
-    strcpy(paises[], "brasil");
-    strcpy(paises[], "canada");
-    strcpy(paises[], "alemanha");
-    strcpy(paises[], "turquia");
-    strcpy(paises[], "afeganistao");
-    strcpy(paises[], "zimbabue");
-    strcpy(paises[], "turcomenistao");
-    strcpy(paises[], "china");
-    strcpy(paises[], "taiwan");
-    strcpy(paises[], "moldavia");
+    strcpy(paises[0], "brasil");
+    strcpy(paises[1], "canada");
+    strcpy(paises[2], "alemanha");
+    strcpy(paises[3], "turquia");
+    strcpy(paises[4], "afeganistao");
+    strcpy(paises[5], "zimbabue");
+    strcpy(paises[6], "turcomenistao");
+    strcpy(paises[7], "china");
+    strcpy(paises[8], "taiwan");
+    strcpy(paises[9], "moldavia");
 }
 
-int checa_espacos_faltantes() {
-
+int checa_espacos_faltantes(char *vetor_jogo, int tamanho_palavra) {
+    int i, espacos;
+    for (i = 0; i < tamanho_palavra; i++) {
+        if (vetor_jogo[i] == '_') {
+            espacos++;
+        }
+    }
+    if (espacos > 0) {
+        return 1;
+    } else {
+        return 0;
+    }
 }
 
 int escolhe_modo_jogo() {
     int modo_jogo;
-    printf("Você gostaria de jogar no tema objetos (1) ou países (2)?");
-    scanf("%d", &modo_jogo);
+    printf("Você gostaria de jogar no tema objetos (1) ou países (2)?\n");
+    scanf(" %d", &modo_jogo);
     return modo_jogo;
 }
 
@@ -49,7 +59,7 @@ char recebe_letra() {
     return letra;
 }
 
-int checa_letra_digitada(char alfabeto[27], char letra) {
+int checa_letra_digitada(char alfabeto[], char letra) {
     int i, esta_riscada = 1;
     for (i = 0; i < 26; i++) {
         if (letra == alfabeto[i]) {
@@ -91,6 +101,7 @@ void inicializa_jogo_zerado(char *vetor_jogo, int tamanho_palavra){
     {
         vetor_jogo[i] = '_';
     }
+    vetor_jogo[tamanho_palavra] = '\0';
 }
 
 void reseta_indices_aparicao(int *indices_aparicao_letra, int tamanho_palavra) {
@@ -111,11 +122,11 @@ void printa_vetor_jogo(char *vetor_jogo) {
     printf("Por enquanto, a palavra formada é: %s", vetor_jogo);
 }
 
+
 int main()
 {
     char objetos[10][100], paises[10][100], palavra[100], letra_input;
     int i, i_random, modo_jogo, num_erros = 10;
-    int *ptr_modo_jogo;
     cria_array_objetos(objetos);
     cria_array_paises(paises);
 
@@ -124,15 +135,14 @@ int main()
     modo_jogo = escolhe_modo_jogo();
 
     if (modo_jogo == 1) {
-        ptr_modo_jogo = objetos;
+        strcpy(palavra, objetos[i_random]);
     } else if (modo_jogo == 2) {
-        ptr_modo_jogo = paises;
+        strcpy(palavra, paises[i_random]);
     } else {
         printf("Esse modo de jogo não existe.\n");
         exit(1);
     }
 
-    palavra = *ptr_modo_jogo + i_random;
     int tamanho_palavra = strlen(palavra);
     char *vetor_jogo;
     vetor_jogo = malloc(sizeof(tamanho_palavra + 1));
@@ -140,15 +150,15 @@ int main()
         printf("Não há memória suficiente.\n");
         exit(1);
     }
+    inicializa_jogo_zerado(vetor_jogo, tamanho_palavra);
 
-    inicializa_jogo_zerado(tamanho_palavra, vetor_jogo);
-
-    char alfabeto = "abcdefghijklmnopqrstuvwxyz";
+    char alfabeto[] = "abcdefghijklmnopqrstuvwxyz";
     int bool_letra_riscada, esta_no_jogo, num_aparicoes_letra;
     int *indices_aparicao_letra;
     indices_aparicao_letra = malloc(sizeof(tamanho_palavra) * 4);
 
-    while (checa_espacos_faltantes == 1)
+    printf("A palavra é da forma %s (%d letras)\n", vetor_jogo, tamanho_palavra);
+    while (checa_espacos_faltantes(vetor_jogo, tamanho_palavra) == 1)
     {
         reseta_indices_aparicao(indices_aparicao_letra, tamanho_palavra);
         letra_input = recebe_letra();
@@ -157,12 +167,22 @@ int main()
             esta_no_jogo = checa_esta_jogo(letra_input, palavra, tamanho_palavra);
             if (esta_no_jogo == 1) {
                 num_aparicoes_letra = retira_letra_palavra(palavra, tamanho_palavra, letra_input, indices_aparicao_letra);
-                coloca_letra_vetor();
+                coloca_letra_vetor(indices_aparicao_letra, num_aparicoes_letra, vetor_jogo, letra_input);
                 printa_vetor_jogo(vetor_jogo);
+            } else {
+                printf("Esta letra não faz parte da palavra.\n");
+                num_erros--;
             }
         } else {
-            
+            printf("Você já tentou esta letra.\n");
         }
+        printf("Você só pode errar mais %d vezes.\n", num_erros);
+    }
+
+    if (num_erros > 0) {
+        printf("Parabéns! Você acertou!\n");
+    } else {
+        printf("Puts, você perdeu. Tente jogar outra vez!\n");
     }
     free(vetor_jogo);
     free(indices_aparicao_letra);
