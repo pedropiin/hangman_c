@@ -12,7 +12,7 @@ void cria_array_objetos(char objetos[][100])
     strcpy(objetos[4], "vuvuzela");
     strcpy(objetos[5], "bicicleta");
     strcpy(objetos[6], "chaveiro");
-    strcpy(objetos[7], "garrafa");
+    strcpy(objetos[7], "bola de bilhar");
     strcpy(objetos[8], "lapiseira");
     strcpy(objetos[9], "guidao");
     strcpy(objetos[10], "xilofone");
@@ -21,7 +21,7 @@ void cria_array_objetos(char objetos[][100])
     strcpy(objetos[13], "ampulheta");
     strcpy(objetos[14], "despertador");
     strcpy(objetos[15], "saxofone");
-    strcpy(objetos[16], "skate");
+    strcpy(objetos[16], "peca de xadrez");
     strcpy(objetos[17], "candelabro");
     strcpy(objetos[18], "paquimetro");
     strcpy(objetos[19], "desfibrilador");
@@ -29,25 +29,25 @@ void cria_array_objetos(char objetos[][100])
 
 void cria_array_paises(char paises[][100])
 {
-    strcpy(paises[0], "brasil");
+    strcpy(paises[0], "coreia do norte");
     strcpy(paises[1], "canada");
     strcpy(paises[2], "alemanha");
     strcpy(paises[3], "turquia");
     strcpy(paises[4], "afeganistao");
     strcpy(paises[5], "zimbabue");
     strcpy(paises[6], "turcomenistao");
-    strcpy(paises[7], "china");
+    strcpy(paises[7], "antiga e barbuda");
     strcpy(paises[8], "taiwan");
     strcpy(paises[9], "moldavia");
     strcpy(paises[10], "australia"); //19
     strcpy(paises[11], "butao");
-    strcpy(paises[12], "bielorussia");
+    strcpy(paises[12], "bielorrussia");
     strcpy(paises[13], "eritrea"); //14
     strcpy(paises[14], "kiribati");
-    strcpy(paises[15], "espanha");
+    strcpy(paises[15], "burquina faso");
     strcpy(paises[16], "argentina");
     strcpy(paises[17], "venezuela");
-    strcpy(paises[18], "egito");
+    strcpy(paises[18], "sao tome e principe");
     strcpy(paises[19], "liechtenstein"); //13
 }
 
@@ -57,7 +57,7 @@ void cria_array_animais(char animais[][100]) {
     strcpy(animais[2], "bacalhau");
     strcpy(animais[3], "escaravelho");
     strcpy(animais[4], "hamster");
-    strcpy(animais[5], "gato");
+    strcpy(animais[5], "mico leado dourado");
     strcpy(animais[6], "tuiuiu");
     strcpy(animais[7], "tapir");
     strcpy(animais[8], "ornitorrinco");
@@ -138,11 +138,15 @@ int retira_letra_palavra(char palavra[], int tamanho_palavra, char letra_input, 
     return contagem_aparicoes;
 }   
 
-void inicializa_jogo_zerado(char *vetor_jogo, int tamanho_palavra){
+void inicializa_jogo_zerado(char *vetor_jogo, int tamanho_palavra, char palavra[]){
     int i;
     for (i = 0; i < tamanho_palavra; i++)
     {   
-        vetor_jogo[i] = '_';
+        if (palavra[i] == ' ') {
+            vetor_jogo[i] = '/';
+        } else {
+            vetor_jogo[i] = '_';
+        }
     }
     vetor_jogo[tamanho_palavra] = '\0';
 }
@@ -169,7 +173,7 @@ void printa_vetor_jogo(char *vetor_jogo) {
 int main()
 {
     char objetos[20][100], paises[20][100], animais[20][100], palavra[100], letra_input;
-    int i, i_random, modo_jogo, num_erros = 5;
+    int i, i_random, modo_jogo, num_erros = 6;
     cria_array_objetos(objetos);
     cria_array_paises(paises);
     cria_array_animais(animais);
@@ -196,7 +200,8 @@ int main()
         printf("Não há memória suficiente.\n");
         exit(1);
     }
-    inicializa_jogo_zerado(vetor_jogo, tamanho_palavra);
+
+    inicializa_jogo_zerado(vetor_jogo, tamanho_palavra, palavra);
 
     char alfabeto[] = "abcdefghijklmnopqrstuvwxyz";
     int bool_letra_riscada, esta_no_jogo, num_aparicoes_letra;
@@ -232,7 +237,7 @@ int main()
             printf("Puts, você perdeu. Tente jogar outra vez!\n");
             break;
         }
-        
+        printf("\n");
     }
 
     if (num_erros > 0) {
