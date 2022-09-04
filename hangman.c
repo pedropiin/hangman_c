@@ -203,10 +203,14 @@ int main()
 
     inicializa_jogo_zerado(vetor_jogo, tamanho_palavra, palavra);
 
-    char alfabeto[] = "abcdefghijklmnopqrstuvwxyz";
-    int bool_letra_riscada, esta_no_jogo, num_aparicoes_letra;
+    char alfabeto[] = "abcdefghijklmnopqrstuvwxyz", letras_inputadas[52];
+    int bool_letra_riscada, esta_no_jogo, num_aparicoes_letra, indice_letras_inputadas = 0;
     int *indices_aparicao_letra;
     indices_aparicao_letra = malloc(sizeof(tamanho_palavra) * 4);
+    if (indices_aparicao_letra == NULL) {
+        printf("Não há memória suficiente para realizar o jogo.\n");
+        exit(1);
+    }
 
     /*
     A partir daqui, o jogo é inicializado.
@@ -229,12 +233,17 @@ int main()
                 num_erros--;
                 printf("Você pode errar mais %d vezes.\n", num_erros);   
             }
+            letras_inputadas[indice_letras_inputadas] = letra_input;
+            indice_letras_inputadas++;
+            letras_inputadas[indice_letras_inputadas] = ',';
+            indice_letras_inputadas++;
+            printf("As letras já testadas são: %s\n", letras_inputadas);
         } else {
             printf("Você já tentou esta letra.\n");
         }
 
         if (num_erros <= 0) {
-            printf("Puts, você perdeu. Tente jogar outra vez!\n");
+            printf("Puts, você perdeu. Tente jogar outra vez!\n",);
             break;
         }
         printf("\n");
